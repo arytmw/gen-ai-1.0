@@ -1,0 +1,20 @@
+services:
+  db:
+    image: postgres:18
+    environment:
+      POSTGRES_DB: banking
+      POSTGRES_USER: banking
+      POSTGRES_PASSWORD: banking_demo # Local demo credentials only.
+    ports:
+      - "127.0.0.1:5433:5432"
+    volumes:
+      - banking_data:/var/lib/postgresql
+      - ./init.sql:/docker-entrypoint-initdb.d/01-banking.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -h 127.0.0.1 -U banking -d banking"]
+      interval: 2s
+      timeout: 5s
+      retries: 15
+
+volumes:
+  banking_data:
